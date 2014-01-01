@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Javafx
+Bundle-SymbolicName: org.eclipse.osgi.javafx
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.osgi.javafx.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
