@@ -15,7 +15,7 @@ public class JavaFXClassLoaderDelegateHook extends ClassLoaderHook implements Ho
 
 	@Override
 	public Class<?> postFindClass(String name, ModuleClassLoader classLoader) throws ClassNotFoundException {
-		if (name.startsWith("javafx."))
+		if (name.startsWith("javafx.") || name.startsWith("com.sun.glass"))
 			return ClassLoader.getSystemClassLoader().loadClass(name);
 		else
 			return null;
