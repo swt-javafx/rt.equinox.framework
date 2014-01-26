@@ -48,6 +48,7 @@
     <module>bundles/org.eclipse.osgi.services</module>
     <module>bundles/org.eclipse.osgi.util</module>
     <module>bundles/org.eclipse.osgi/supplement</module>
+    <module>bundles/org.eclipse.osgi.javafx</module>
     
     <module>bundles/org.eclipse.equinox.launcher</module>
     <module>bundles/org.eclipse.equinox.launcher.cocoa.macosx</module>
