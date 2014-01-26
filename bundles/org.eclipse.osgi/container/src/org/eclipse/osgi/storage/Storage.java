@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2013 IBM Corporation and others.
+ * Copyright (c) 2012, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,10 +42,10 @@ import org.eclipse.osgi.storagemanager.StorageManager;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.*;
-import org.osgi.framework.namespace.HostNamespace;
-import org.osgi.framework.namespace.NativeNamespace;
-import org.osgi.framework.wiring.BundleRevision;
-import org.osgi.framework.wiring.BundleWiring;
+import org.osgi.framework.namespace.*;
+import org.osgi.framework.wiring.*;
+import org.osgi.resource.Namespace;
+import org.osgi.resource.Requirement;
 
 public class Storage {
 	public static final int VERSION = 3;
@@ -128,7 +128,7 @@ public class Storage {
 			try {
 				generations = loadGenerations(data);
 			} catch (IllegalArgumentException e) {
-				equinoxContainer.getLogServices().log(EquinoxContainer.NAME, FrameworkLogEntry.WARNING, "Incompatible version.  Starting with empty framework.", e); //$NON-NLS-1$
+				equinoxContainer.getLogServices().log(EquinoxContainer.NAME, FrameworkLogEntry.WARNING, "The persistent format for the framework data has changed.  The framework will be reinitialized: " + e.getMessage(), null); //$NON-NLS-1$
 				generations = new HashMap<Long, Generation>(0);
 				data = null;
 				cleanOSGiStorage(osgiLocation, childRoot);
@@ -276,6 +276,17 @@ public class Storage {
 			Map<String, Object> configMap = equinoxContainer.getConfiguration().getInitialConfig();
 			for (ModuleCapability nativeEnvironment : nativeEnvironments) {
 				nativeEnvironment.setTransientAttrs(configMap);
+			}
+			Requirement osgiPackageReq = ModuleContainer.createRequirement(PackageNamespace.PACKAGE_NAMESPACE, Collections.singletonMap(Namespace.REQUIREMENT_FILTER_DIRECTIVE, "(" + PackageNamespace.PACKAGE_NAMESPACE + "=org.osgi.framework)"), Collections.<String, String> emptyMap()); //$NON-NLS-1$ //$NON-NLS-2$
+			Collection<BundleCapability> osgiPackages = moduleContainer.getFrameworkWiring().findProviders(osgiPackageReq);
+			for (BundleCapability packageCapability : osgiPackages) {
+				if (packageCapability.getRevision().getBundle().getBundleId() == 0) {
+					Version v = (Version) packageCapability.getAttributes().get(PackageNamespace.CAPABILITY_VERSION_ATTRIBUTE);
+					if (v != null) {
+						this.equinoxContainer.getConfiguration().setConfiguration(Constants.FRAMEWORK_VERSION, v.toString());
+						break;
+					}
+				}
 			}
 		} catch (Exception e) {
 			if (e instanceof RuntimeException) {
@@ -1136,7 +1147,7 @@ public class Storage {
 		}
 		int version = in.readInt();
 		if (version != VERSION) {
-			throw new IllegalArgumentException("The version of the persistent framework data is not compatible: " + version + " expecting: " + VERSION); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new IllegalArgumentException("Found persistent version \"" + version + "\" expecting \"" + VERSION + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		int numCachedHeaders = in.readInt();
 		List<String> storedCachedHeaderKeys = new ArrayList<String>(numCachedHeaders);
