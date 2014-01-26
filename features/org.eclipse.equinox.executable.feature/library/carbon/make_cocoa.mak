@@ -91,6 +91,7 @@ $(DLL): $(DLL_OBJS) $(COMMON_OBJS)
 
 install: all
 	cp -v $(EXEC) $(PROGRAM_OUTPUT_DIR)
+	cp -v $(DLL) $(LIBRARY_OUTPUT_DIR)
 	rm -f $(EXEC) $(OBJS)
 
 clean:

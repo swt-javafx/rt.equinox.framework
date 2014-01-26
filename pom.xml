@@ -63,6 +63,7 @@
     <module>bundles/org.eclipse.equinox.launcher.gtk.linux.x86_64</module>
     <module>bundles/org.eclipse.equinox.launcher.gtk.solaris.sparc</module>
     <module>bundles/org.eclipse.equinox.launcher.gtk.solaris.x86</module>
+    <module>bundles/org.eclipse.equinox.launcher.javafx.macosx.x86_64</module>
     <module>bundles/org.eclipse.equinox.launcher.motif.aix.ppc</module>
     <module>bundles/org.eclipse.equinox.launcher.motif.hpux.ia64_32</module>
     <module>bundles/org.eclipse.equinox.launcher.motif.linux.x86</module>

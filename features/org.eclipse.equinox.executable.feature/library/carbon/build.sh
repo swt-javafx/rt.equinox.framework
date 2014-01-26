@@ -27,9 +27,9 @@ cd `dirname $0`
 # Define default values for environment variables used in the makefiles.
 programOutput="eclipse"
 defaultOS="macosx"
-defaultOSArch="x86"
-defaultWS="carbon"
-makefile="make_carbon.mak"
+defaultOSArch="x86_64"
+defaultWS="cocoa"
+makefile="make_cocoa.mak"
 if [ "$OS" = "" ];  then
     OS=`uname -s`
 fi
@@ -64,12 +64,13 @@ EXEC_DIR=../../../../../rt.equinox.binaries/org.eclipse.equinox.executable
 PPC_OUTPUT_DIR="$EXEC_DIR/bin/$defaultWS/$defaultOS/ppc/Eclipse.app/Contents/MacOS"
 X86_OUTPUT_DIR="$EXEC_DIR/bin/$defaultWS/$defaultOS/x86/Eclipse.app/Contents/MacOS"
 X86_64_OUTPUT_DIR="$EXEC_DIR/bin/$defaultWS/$defaultOS/x86_64/Eclipse.app/Contents/MacOS"
+LIBRARY_OUTPUT_DIR="../../../../../rt.equinox.binaries/org.eclipse.equinox.launcher.$defaultWS.$defaultOS.$defaultOSArch"
 
-if [ "$DEFAULT_WS" == "cocoa" ]; then
-	makefile="make_cocoa.mak"
-	export MACOSX_DEPLOYMENT_TARGET=10.5
+if [ "$DEFAULT_WS" == "carbon" ]; then
+	makefile="make_carbon.mak"
+	export MACOSX_DEPLOYMENT_TARGET=10.3
 else
-	export MACOSX_DEPLOYMENT_TARGET=10.3	
+	export MACOSX_DEPLOYMENT_TARGET=10.5	
 fi
 
 if [ "$DEFAULT_OS_ARCH" == "x86_64" ]; then
@@ -83,7 +84,7 @@ else
 	PROGRAM_OUTPUT_DIR=$X86_OUTPUT_DIR
 fi
  
-export PPC_OUTPUT_DIR X86_OUTPUT_DIR X86_64_OUTPUT_DIR PROGRAM_OUTPUT DEFAULT_OS DEFAULT_OS_ARCH DEFAULT_WS ARCHS PROGRAM_OUTPUT_DIR
+export PPC_OUTPUT_DIR X86_OUTPUT_DIR X86_64_OUTPUT_DIR PROGRAM_OUTPUT DEFAULT_OS DEFAULT_OS_ARCH DEFAULT_WS ARCHS PROGRAM_OUTPUT_DIR LIBRARY_OUTPUT_DIR
 
 # If the OS is supported (a makefile exists)
 if [ "$makefile" != "" ]; then
